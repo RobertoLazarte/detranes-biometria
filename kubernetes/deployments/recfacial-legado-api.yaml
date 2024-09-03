@@ -1,0 +1,57 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: recfacial-legado-api
+  name: recfacial-legado-api
+spec:
+  replicas: 7
+  selector:
+    matchLabels:
+      app: recfacial-legado-api
+
+  template:
+    metadata:
+      labels:
+        app: recfacial-legado-api
+    spec:
+      containers:
+        - envFrom:
+            - configMapRef:
+                name: recfacial-legado-api-connections
+          image: harbor.mgr.detranes.vert.com.br/recfacial-legado/recfacial-legado-api:0.4.1
+          imagePullPolicy: IfNotPresent
+          name: recfacial-legado-api
+          ports:
+            - containerPort: 8000
+              protocol: TCP
+          resources: {}
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+          volumeMounts:
+            - mountPath: /dados/infra/api-rec-facial-dados
+              name: volume-thj77
+            - mountPath: /dados/cacerts
+              name: volume-oik86
+            - mountPath: /app/assets/log/
+              name: volume-kfs42
+            - mountPath: /dados/infra/api-facial
+              name: volume-lvf46              
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      securityContext: {}
+      terminationGracePeriodSeconds: 30
+      volumes:
+        - name: volume-thj77
+          persistentVolumeClaim:
+            claimName: pvc-recfacial-legado-models
+        - name: volume-oik86
+          persistentVolumeClaim:
+            claimName: pvc-recfacial-legado-cacerts
+        - name: volume-kfs42
+          persistentVolumeClaim:
+            claimName: pvc-recfacial-legado-logs
+        - name: volume-lvf46
+          persistentVolumeClaim:
+            claimName: pvc-recfacial-legado-photos-temp

@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: Service
+metadata:
+  namespace: recfacial-legado
+  labels:
+    app: recfacial-legado-api
+  name: recfacial-legado-api
+spec:
+  ports:
+    - name: recfacial-legado-api-tcp
+      port: 80
+      protocol: TCP
+      targetPort: 8000
+  selector:
+    app: recfacial-legado-api
+  sessionAffinity: None
+  type: ClusterIP
+status:
+  loadBalancer: {}

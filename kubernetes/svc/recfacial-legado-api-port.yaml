@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: recfacial-legado-api-port
+  labels:
+    app: recfacial-legado-api
+spec:
+  type: NodePort
+  selector:
+    app: recfacial-legado-api
+  ports:
+    - port: 8000
+      targetPort: 8000
+      nodePort: 32001

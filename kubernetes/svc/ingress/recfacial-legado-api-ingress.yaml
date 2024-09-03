@@ -1,0 +1,34 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+    field.cattle.io/publicEndpoints: '[{"addresses":["192.168.0.236"],"port":443,"protocol":"HTTPS","serviceName":"recfacial-legado:recfacial-legado-api","ingressName":"recfacial-legado:recfacial-legado-api-ingress","hostname":"telemetria.vert.com.br","path":"/","allNodes":true}]'
+    nginx.ingress.kubernetes.io/proxy-body-size: "0"  
+  name: recfacial-legado-api-ingress
+  namespace: recfacial-legado
+  labels:
+    name: recfacial-legado-api-ingress
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: telemetria.vert.com.br
+      http:
+        paths:
+          - path: "/"
+            pathType: Prefix
+            backend:
+              service:
+                name: recfacial-legado-api
+                port:
+                  number: 8000
+  tls:
+    - hosts:
+        - telemetria.vert.com.br
+      secretName: recfacial-legado-api-tls
+status:
+  loadBalancer:
+    ingress:
+      - ip: 192.168.0.236
+      - ip: 192.168.0.246
+      - ip: 192.168.0.66

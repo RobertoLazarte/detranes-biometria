@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: recfacial-legado-postgres
+  name: recfacial-legado-postgres
+  namespace: recfacial-legado
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: recfacial-legado-postgres
+  template:
+    metadata:
+      labels:
+        app: recfacial-legado-postgres
+    spec:
+      containers:
+        - name: recfacial-legado-postgres
+          envFrom:
+            - configMapRef:
+                name: recfacial-legado-postgres-map
+          image: "harbor.mgr.detranes.vert.com.br/recfacial-legado/postgres:12"
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 5432
+              protocol: TCP
+          resources: {}
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+          volumeMounts:
+            - mountPath: /var/lib/postgresql/data
+              name: volume-lba78          
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      terminationGracePeriodSeconds: 30
+      volumes:
+        - name: volume-lba78
+          persistentVolumeClaim:
+            claimName: pvc-recfacial-legado-postgres      

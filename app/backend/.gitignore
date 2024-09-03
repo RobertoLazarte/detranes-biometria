@@ -1,0 +1,9 @@
+downloads/*
+!edocs_downloads/CNH
+!edocs_downloads/CA
+uploads/*
+scripts/api/temp/*
+scripts/api/batch_temp/*
+__pycache__
+.vscode
+.ipynb_checkpoints/
